@@ -1,5 +1,5 @@
 import tensorflow as tf
-from musicnn import configuration as config
+from musicnn.musicnn import configuration as config
 
 # disabling deprecation warnings (caused by change from tensorflow 1.x to 2.x)
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
@@ -20,7 +20,7 @@ def define_model(x, is_training, model, num_classes):
         return build_musicnn(x, is_training, num_classes, num_filt_midend=512, num_units_backend=500)
 
     elif model == 'MSD_vgg':
-        return vgg(x, is_training, num_classes, 128)            
+        return vgg(x, is_training, num_classes, 128)
 
     else:
         raise ValueError('Model not implemented!')
@@ -234,10 +234,10 @@ def vgg(x, is_training, num_classes, num_filters=32):
     pool4 = tf.compat.v1.layers.max_pooling2d(inputs=bn_conv4, pool_size=[2, 2], strides=[2, 2])
 
     do_pool4 = tf.compat.v1.layers.dropout(pool4, rate=0.25, training=is_training)
-    conv5 = tf.compat.v1.layers.conv2d(inputs=do_pool4, 
-                             filters=num_filters, 
-                             kernel_size=[3, 3], 
-                             padding='same', 
+    conv5 = tf.compat.v1.layers.conv2d(inputs=do_pool4,
+                             filters=num_filters,
+                             kernel_size=[3, 3],
+                             padding='same',
                              activation=tf.nn.relu,
                              name='5CNN')
     bn_conv5 = tf.compat.v1.layers.batch_normalization(conv5, training=is_training)
@@ -248,6 +248,6 @@ def vgg(x, is_training, num_classes, num_filters=32):
     output = tf.compat.v1.layers.dense(inputs=do_pool5,
                             activation=None,
                             units=num_classes)
-    return output, pool1, pool2, pool3, pool4, pool5   
+    return output, pool1, pool2, pool3, pool4, pool5
 
 
